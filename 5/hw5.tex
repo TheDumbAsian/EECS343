@@ -1,0 +1,107 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{minted}
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{blindtext}
+\usepackage{amssymb}
+\usepackage{scrextend}
+\usepackage{multicol}
+\usepackage{wrapfig}
+\usepackage{tikz}
+
+\usepackage{amsthm}
+
+\usepackage[margin=1in]{geometry}
+
+\title{\vspace{-3cm}Homework 5}
+\author{Yutong Huang (yxh589)}
+\date{}
+
+\begin{document}
+\maketitle
+\section*{Problem 1}
+To show that $L$ is a context-free language, contruct a PDA that accepts $L$.\\*
+$A$ and $B$ are regular languages $\implies$ There exist DFAs $M_A$ and $M_B$ that accepts $A$ and $B$ respectively.\\*
+Construct the following PDA:
+\begin{algorithm}
+    \DontPrintSemicolon
+    \SetKwInOut{Input}{Input}
+    Initialize $M_A$\;
+    \While {$M_A$ is not in an accept state}{
+        Simulate $M_A$\;
+        Push an X onto the stack\;
+    }
+    Initialize $M_B$\;
+    \While{$M_B$ is not in an accept state}{
+        Simulate $M_B$\;
+        \If {Stack is empty}{
+            Reject\;
+        }
+        Pop an X from the stack\;
+    }
+    \If {Stack is empty}{
+        Accept\;
+    }
+    Reject\;
+    \caption{PDA for $L$}
+\end{algorithm}\\*
+This PDA correctly decides $L$.
+\begin{proof}
+    Case 1: $M_A$ pushes more X's than $M_B$ pops $\implies$ PDA rejects.\\*
+    Case 2: $M_A$ pushes fewer X's than $M_B$ pops $\implies$ PDA rejects.\\*
+    Case 3: $M_A$ pushes exactly the same number of X's as $M_B$ pops
+    $\implies$ PDA accepts.\\*
+    Therefore PDA correctly decides $L$.
+\end{proof}
+
+\section*{Problem 2}
+Prove languages are not context free using the pumping lemma for context free languages\\*
+\subsection*{a}
+\begin{proof}
+    Proof by contradiction: assume $L$ is a context free language;\\*
+    $\implies \exists p \ge 1$ such that every string $s \in L$ with length larger than $p$ can be written as:
+    $$s=uvwxy$$
+    where $u,v,w,x,y$ are substrings of $s$ such that:
+    \begin{enumerate}
+        \item $|vx| \ge 1$
+        \item $|vwx| \le p$
+        \item $\forall k \ge 0, uv^kwx^ky \in L$
+    \end{enumerate}
+    \newpage
+    For $vwx$ there are following possible cases:
+    \begin{enumerate}
+        \item $vwx=a^i,\ i \le p$, then $uv^kwx^ky$ has at least $k$ more $a$'s than $s \implies uv^kwx^ky \notin L$ if $k \ge 1$
+        \item $vwx=a^ib^j,\ i+j \le p$, then $uv^kwx^ky$ has at least $k$ more $a$'s and $b$'s than $s$ but no more $c$'s $ \implies uv^kwx^ky \notin L$ if $k \ge 1$
+        \item $vwx=b^i,\ i \le p$, then $uv^kwx^ky$ has at least $k$ more $b$'s than $s \implies uv^kwx^ky \notin L$ if $k \ge 1$
+        \item $vwx=b^ic^j,\ i+j \le p$, then $uv^kwx^ky$ has at least $k$ more $b$'s and $c$'s than $s$ but no more $a$'s $ \implies uv^kwx^ky \notin L$ if $k \ge 1$
+        \item $vwx=c^i,\ i \le p$, then $uv^kwx^ky$ has at least $k$ more $c$'s than $s \implies uv^kwx^ky \notin L$ if $k \ge 1$
+    \end{enumerate}
+    This contradicts the pumping lemma, therefore $L$ is not a context free language.
+\end{proof}
+\subsection*{b}
+\begin{proof}
+    Proof by contradiction: assume $L$ is a context free language;\\*
+    $\implies \exists p \ge 1$ such that every string $s \in L$ with length larger than $p$ can be written as:
+    $$s=uvwxy$$
+    where $u,v,w,x,y$ are substrings of $s$ such that:
+    \begin{enumerate}
+        \item $|vx| \ge 1$
+        \item $|vwx| \le p$
+        \item $\forall k \ge 0, uv^kwx^ky \in L$
+    \end{enumerate}
+    For $vwx$ there are following possible cases:
+    \begin{enumerate}
+        \item $vwx=0 \implies v^kwx^ky \notin L$ if $k \ge 1$ because it would have extra 0s
+        \item $vwx=1 \implies v^kwx^ky \notin L$ if $k \ge 1$ because it would have extra 1s
+        \item $vwx=0^i10^j, i+j+1 \le p \implies v^kwx^ky \notin L$ if $k \ge 1$ because of the extra 0s
+        \item $vwx=0^i, i \le p \implies v^kwx^ky \notin L$ if $k \ge 1$ because of the extra 0s
+    \end{enumerate}
+    This contradicts the pumping lemma, therefore $L$ is not a context free language.
+\end{proof}
+
+\section*{Problem 3}
+I do not know the answer to this question.
+\end{document}

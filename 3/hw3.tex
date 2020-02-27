@@ -1,0 +1,142 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{minted}
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{blindtext}
+\usepackage{amssymb}
+\usepackage{scrextend}
+\usepackage{multicol}
+\usepackage{wrapfig}
+\usepackage{tikz}
+
+\usepackage{amsthm}
+
+\usepackage[margin=1in]{geometry}
+\pagestyle{empty}
+
+\title{\vspace{-3cm}Homework 3}
+\author{Yutong Huang (yxh589)}
+\date{}
+
+\begin{document}
+    \maketitle
+    \section*{Problem 1}
+    \begin{proof}
+        Proof by contradiction.\\*
+        Assume $L_{343}$ is decidable $\implies$ There exists an algotithm that decides $L_{343}$. \\*
+        Then assume algorithm $ DecideL_{343} $ correctly decides $ L_{343} $, and contruct the following algorithm:
+        \begin{algorithm}
+            \DontPrintSemicolon
+            \caption{$DecideHalt$}
+            \SetKwFunction{MPrime}{M'}
+            \SetKwFunction{DL}{$DecideL_{343}$}
+            \SetKwProg{sub}{TuringMachine}{}{}
+            \SetKwInOut{Input}{Input}
+
+            \Input{$M, w$}
+            Encode the following Turing machine:\;
+            \sub{\MPrime{x}}{
+                Run M on w\;
+                \If{x=EECS343, or x=is, or x=fun}{
+                    \Return true\;
+                }\Else{
+                    \Return false\;
+                }
+            }
+            \If{\DL{M'}}{
+                \Return true\;
+            }\Else{
+                \Return false\;
+            }
+        \end{algorithm}\\*
+        Case 1: M halts on input w
+        \begin{addmargin}[2em]{0em}
+            $\implies$ M' halts and accept any string from $\{EECS343,\ is,\ fun\}$ and no other strings.\\*
+            $\implies\ DecideL_{343}$ returns true $\rightarrow\ DecideL_{343}$ accepts.\\*
+            $ \implies\ DecideHalt$ returns true $\rightarrow\ DecideHalt$ accepts.   
+        \end{addmargin}
+        Case 2: M does not halt on input w
+        \begin{addmargin}[2em]{0em}
+            $\implies$ M' does not halt on any input\\*
+            $\implies$ M' does not accept any string from $\{EECS343,\ is,\ fun\}$ and no other strings.\\*
+            $\implies\ DecideL_{343}$ returns false $\rightarrow\ DecideL_{343}$ rejects.\\*
+            $ \implies\ DecideHalt$ returns false $\rightarrow\ DecideHalt$ rejects.\\*
+        \end{addmargin}
+
+        Therefore, the algorithm $DecideHalt$ correctly decides if M halts on input w, which is impossible.
+        \begin{proof}
+            Assume there is an algorithm $Halt(P,I)$ that correctly decides if an algorithm P halts on input I,
+            and construct the following algorithm
+            \begin{algorithm}
+                \DontPrintSemicolon
+                \caption{$Z$}
+                \SetKwInOut{Input}{Input}
+                \Input{x}
+                \If{$Halt(x,x)$}{
+                    loop forever\;
+                }\Else{
+                    \Return\;
+                }
+
+            \end{algorithm}\\*
+            Consider $Z(Z)$\\*
+            Case 1: If Z halts on Z, then Z loops forever $\implies$ contradiction.\\*
+            Case 2: If Z does not halt on Z, then Z returns $\implies$ contradiction.\\*
+            Therefore, there is no algorithm that correctly decides if a program will halt on given input.
+        \end{proof}
+
+        By contradiction, then, $DecideL_{343}$ cannot exist $\implies\ L_{343}$ is undecidable.
+    \end{proof}
+    \newpage
+    \section*{Problem 2}
+    $L=\{\langle M,q \rangle|q\ is\ a\ useless\ state\ in\ TM\ M \}$\\* 
+    Prove $L$ is undecidable.
+    \begin{proof}
+        Proof by contradiction, assume $L$ is decidable and a machine $DecideL$ decides it.
+        We know that for any Turing machine M, for which $L(M)=\phi$, $q_{accept}$ is a useless state.\\*
+        Reduce $L$ to $E_{TM}=\{\langle M \rangle |M\ is\ a\ TM\ and\ L(M)=\phi \}$, and consider the following algorithm:
+        \begin{algorithm}
+            \caption{$ DecideE_{TM} $}
+            \SetKwInOut{Input}{Input}
+            \Input{M}
+            Run $DecideL(\langle M, q_{accept} \rangle )$ \;
+            \If{$DecideL$ accepts}{
+                \Return true\;
+            }\Else{
+                \Return false\;
+            }
+        \end{algorithm}\\*
+        Then we have an algorithm $DecideE_{TM}$ that decides $E_{TM}$, which is impossible according in Theorem 5.2 in the book.\\*
+
+        Therefore, by contradiction, $L$ is undecidable.
+
+    \end{proof}
+    \section*{Problem 3}
+    Consider $B=\{w|w=0x\ for\ some\ x \in A_{TM}, or\ w=1y\ for\ some y \in \overline{A_{TM}}\}$.\\*\\*
+    Then $\overline{B}=\{ w|w=\epsilon,or\ w=0x\ for\ some\ x \in \overline{A_{TM}}, or\ w=1y\ for\ some\ y \in A_{TM}\}$\\*\\*
+    Mapping reducibility from $B$ to $\overline{B}$:
+    $$ f(w)=\left\{
+        \begin{aligned}
+        1x &  & (w=0x) \\
+        0x &  & (w=1x) \\
+        \end{aligned}
+        \right. $$
+    Then $B\leq_m \overline{B}$.
+    \begin{proof}
+        $\forall w \in B \Rightarrow f(w) \in \overline{B}$:\\*
+        Case 1: $w=0x$, then $f(w)=1x$, and $x\in A_{TM} \implies f(w) \in \overline{B}$\\*
+        Case 2: $w=1x$, then $f(w)=0x$, and $x\in \overline{A_{TM}} \implies f(w) \in \overline{B}$\\*
+        $\forall f(w) \in \overline{B} \Rightarrow w \in B$:\\*
+        Case 1: $f(w)=1x$, then $x \in A_{TM}$ and $w=0x \implies w \in B$\\*
+        Case 1: $f(w)=0x$, then $x \in \overline{A_{TM}}$ and $w=1x \implies w \in B$
+    \end{proof}
+    $B$ is undecidable.
+    \begin{proof}
+        It's obvious that $A_{TM} \leq_m \overline{B}$, and $A_{TM}$ is unrecognizable, therefore $\overline{B}$ is unrecognizable.\\*
+        Since $B\leq_m \overline{B}$, we can also deduce that $B$ is unrecognizable, which entails that $B$ is undecidable.
+    \end{proof}
+ 
+\end{document}
