@@ -15,6 +15,7 @@
 \usepackage{amsthm}
 \usepackage{multicol}
 \usepackage{fancyhdr}
+\usepackage{parskip}
 \usepackage[margin=0.6in]{geometry}
 
 % Turn on the style
@@ -40,85 +41,27 @@
 \begin{document}
 \maketitle
 \section*{Problem 1}
+
 \begin{multicols}{2}
     \begin{minipage}{0.4\textwidth}
         \begin{algorithm}[H]
-            % \DontPrintSemicolon
-            \caption{$M()$}
-            $ \langle M \rangle \gets \{$\\
-            \nl \hspace{0.5cm}``$M()\{$''\\
-            \nl \hspace{1.0cm}``$ \langle M \rangle \gets \{$'',\\
-            \nl \hspace{1.0cm}``$\}$''\\
-            \nl \hspace{1.0cm}``$ \langle N \rangle \gets \{$'',\\
-            \nl \hspace{1.0cm}``$\}$''\\
-            \nl \hspace{1.0cm}``Print line 1 to 2 of $\langle N \rangle$''\\
-            \nl \hspace{1.0cm}``Print all lines of $\langle M \rangle$''\\
-            \nl \hspace{1.0cm}``Print line 3 to 4 of $\langle N \rangle$''\\
-            \nl \hspace{1.0cm}``Print all lines of $\langle N \rangle$''\\
-            \nl \hspace{1.0cm}``Print line 5 to 11 of $\langle N \rangle$''\\
-            \nl \hspace{0.5cm}``$\}$''\\
-            $ \}$\;
-            \setcounter{AlgoLine}{0}
-            $ \langle N \rangle \gets \{$\\
-            \nl \hspace{0.5cm}``$M()\{$''\\
-            \nl \hspace{1.0cm}``$ \langle M \rangle \gets \{$'',\\
-            \nl \hspace{1.0cm}``$\}$''\\
-            \nl \hspace{1.0cm}``$ \langle N \rangle \gets \{$'',\\
-            \nl \hspace{1.0cm}``$\}$''\\
-            \nl \hspace{1.0cm}``Print line 1 to 2 of $\langle M \rangle$''\\
-            \nl \hspace{1.0cm}``Print all lines of $\langle M \rangle$''\\
-            \nl \hspace{1.0cm}``Print line 3 to 4 of $\langle M \rangle$''\\
-            \nl \hspace{1.0cm}``Print all lines of $\langle N \rangle$''\\
-            \nl \hspace{1.0cm}``Print line 5 to 11 of $\langle M \rangle$''\\
-            \nl \hspace{0.5cm}``$\}$''\\
-            $ \}$\;
-            Print line 1 to 2 of $\langle N \rangle$\;
-            Print all lines of $\langle M \rangle$\;
-            Print line 3 to 4 of $\langle N \rangle$\;
-            Print all lines of $\langle N \rangle$\;
-            Print line 5 to 11 of $\langle N \rangle$\;
+            \caption{$T(\langle M, w\rangle)$}
+            \Return $\langle M \rangle$
         \end{algorithm}
+        According to recursion theorem, $\exists r(w) \rightarrow \langle r(w) \rangle $
+
     \end{minipage}
-    
+
     \begin{minipage}{0.4\textwidth}
         \begin{algorithm}[H]
-            % \DontPrintSemicolon
-            \caption{$N()$}
-            $ \langle M \rangle \gets \{$\\
-            \nl \hspace{0.5cm}``$M()\{$''\\
-            \nl \hspace{1.0cm}``$ \langle M \rangle \gets \{$'',\\
-            \nl \hspace{1.0cm}``$\}$''\\
-            \nl \hspace{1.0cm}``$ \langle N \rangle \gets \{$'',\\
-            \nl \hspace{1.0cm}``$\}$''\\
-            \nl \hspace{1.0cm}``Print line 1 to 2 of $\langle N \rangle$''\\
-            \nl \hspace{1.0cm}``Print all lines of $\langle M \rangle$''\\
-            \nl \hspace{1.0cm}``Print line 3 to 4 of $\langle N \rangle$''\\
-            \nl \hspace{1.0cm}``Print all lines of $\langle N \rangle$''\\
-            \nl \hspace{1.0cm}``Print line 5 to 11 of $\langle N \rangle$''\\
-            \nl \hspace{0.5cm}``$\}$''\\
-            $ \}$\;
-            \setcounter{AlgoLine}{0}
-            $ \langle N \rangle \gets \{$\\
-            \nl \hspace{0.5cm}``$M()\{$''\\
-            \nl \hspace{1.0cm}``$ \langle M \rangle \gets \{$'',\\
-            \nl \hspace{1.0cm}``$\}$''\\
-            \nl \hspace{1.0cm}``$ \langle N \rangle \gets \{$'',\\
-            \nl \hspace{1.0cm}``$\}$''\\
-            \nl \hspace{1.0cm}``Print line 1 to 2 of $\langle M \rangle$''\\
-            \nl \hspace{1.0cm}``Print all lines of $\langle M \rangle$''\\
-            \nl \hspace{1.0cm}``Print line 3 to 4 of $\langle M \rangle$''\\
-            \nl \hspace{1.0cm}``Print all lines of $\langle N \rangle$''\\
-            \nl \hspace{1.0cm}``Print line 5 to 11 of $\langle M \rangle$''\\
-            \nl \hspace{0.5cm}``$\}$''\\
-            $ \}$\;
-            Print line 1 to 2 of $\langle M \rangle$\;
-            Print all lines of $\langle M \rangle$\;
-            Print line 3 to 4 of $\langle M \rangle$\;
-            Print all lines of $\langle N \rangle$\;
-            Print line 5 to 11 of $\langle M \rangle$\;
+            \caption{$M(w)$}
+            Obtain $ \langle M \rangle $ by invoking $ T(\langle M, w\rangle) $\;
+            Print $ \langle r( \langle M \rangle ) \rangle $ and halt\;
         \end{algorithm}
+        $ N = r( \langle M \rangle ) $;\\
+        $ \therefore  M $ prints $ \langle N \rangle $, and $N$ prints $ \langle M \rangle $
     \end{minipage}
-    
+
 \end{multicols}
 
 \section*{Problem 2}
@@ -337,4 +280,25 @@ public class Quine {
     }
 }
 \end{minted}
+\newpage
+\section*{Problem 3}
+
+In class we proved that $ Th(\mathbb{N}, +, \times) $ is undecidable
+by showing that there are some sentences in $ Th $ that are true but
+unprovable. This is done by constructing a Turing machine $S$ with a hypothetical
+true but unprovable sentence $\varphi = \exists c [\phi_{S,0}] $ such that $S$ only accepts if $ \lnot \varphi $
+is proved to be true.\\
+
+This fails at $F_{m}$ because $F_{m}$ is decidable, and thus contains no sentences that are true but unprovable.
+\begin{proof}
+It is obvious that $Z_m$ is finite, therefore we can simply enumerate all the possible
+values to check if the sentence holds. Consider the following procedure:
+\begin{enumerate}
+    \item let the sentence be: $ \exists x_i[\phi_i(x_1,x_2\dots x_i)] $;
+    \item iterate $i$ from $ 0 $ to $ m-1 $ and check if the sentence holds;
+    \item if all iterations of 2 shows the sentence holds, then the it is true, otherwise it is false.
+\end{enumerate}
+The above procedure correctly decides $F_m$\\
+$ \therefore F_m $ is decidable.
+\end{proof}
 \end{document}
