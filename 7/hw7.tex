@@ -40,5 +40,103 @@
 \begin{document}
 \maketitle
 \section*{Problem 1}
+Obviously, if $K(x)$ is computable, then \verb|incompressible(n: integer)| will output every incompressible
+string in $\{0,1\}^n$. To create a short description for an incompressible string using \verb|incompressible(n: integer)|,
+we can create the following procedure:
+\begin{verbatim}
+    function description(S: string){
+        string[] incompressibleList <- incompressible(|S|);
+        if (S in incompressibleList):
+            return S;
+    }
+\end{verbatim}
+\begin{proof}
+    Assume \verb|S| is an arbitrary incompressible string, then \verb|S| is an incompressible string
+    of length $|S|$. Therefore \verb|S in incompressibleList| is true, and the procedure returns \verb|S|;\\
+    $\therefore \forall s \in \{incompressible\ strings\}$, \verb|function description(S: string)| is a short description of $s$.
+\end{proof}
 
+\section*{Problem 2}
+Let languages $L_1, L_2$ be arbitrary languages such that $L_1, L_2 \in P$. Then there must exist Turing machines $M_1, M_2$ that
+decide $L_1$ and $L_2$ in polynomial time respectively. Assume runtimes for $M_1, M_2$ are $t_1, t_2$ respectively.\\
+
+\textit{Union}: Consider language $L_1 \cup L_2$ and the following Turing machine:
+\begin{algorithm}
+    
+    \caption{$M_3(w)$}
+    \DontPrintSemicolon
+    Run $M_1$ on $w$\;
+    \If{$M_1$ accepts}{
+        \textbf{Accept} and \textit{halt}\;
+    }
+    Run $M_2$ on $w$\;
+    \If{$M_2$ accepts}{
+        \textbf{Accept} and \textit{halt}\;
+    }
+    \textbf{Reject}\;
+\end{algorithm}\\
+Then $M_3$ decides $L_1 \cup L_2$ in polynomial time.
+\begin{proof}
+    Case 1: $w \in L_1 \cup L_2$\\
+    Case 1.1: $w \in L_1 \implies M_1\ accepts \implies\ M_3$  accepts and halt; runtime is $t_1+c, c$ is constant.\\ 
+    Case 1.2: $w \notin L_1 \implies M_1\ rejects \implies\ M_2\ accepts \implies M_3$  accepts and halt; runtime is $t_1+t_2+c, c$ is constant.\\ 
+    Case 2: $w \notin L_1 \cup L_2 \implies M_1\ rejects \land M_2\ rejects \implies M_3$ rejects; runtime is $t_1+t_2+c, c$.\\
+    $\therefore M_3$ correctly decides $L_1 \cup L_2$ in polynomial time.
+\end{proof}
+$\therefore L_1\cup L_2 \in P$.\\
+\newpage
+\textit{Concatenation}: Consider language $L_3=\{\langle ab \rangle | a \in L_1 \land b\in L_2\}$ and the following Turing machine:
+\begin{algorithm}
+    \caption{$M_4(w)$}
+    \DontPrintSemicolon
+    Initialize $M_1$ with $w$ on tape and head at the start\;
+    \While{$M_1$ is not in an accept state}{
+        Step through $M_1$ and copy its head movement to $M_4$\;
+        \textbf{Reject} if current symbol is null\;
+    }
+    Initialize $M_2$ with $w$ on tape and the head position of $M_4$\;
+    \While{$M_2$ is not in an accept state}{
+        Step through $M_2$ and copy its head movement to $M_4$\;
+        \textbf{Reject} if current symbol is null\;
+    }
+    \textbf{Accept}\;
+\end{algorithm}\\
+This machine correctly decides $L_3$ in polynomial time.
+\begin{proof}
+    Case 1: $w\in L_3 \implies$ both loops would run without rejecting when $M_1, M_2$ find their corresponding substring and $M_4$ would accept; runtime is $t_1+t_2+c, c$ is constance;\\
+    Case 2: $w \notin L_3$\\
+    Case 2.1: $w$ does not contain any substring belonging to $L_1 \implies M_4$ rejects while simulating $M_1$; runtime is $t_1+c$;\\
+    Case 2.2: $w$ contains a substring that belongs to $L_1$ but no substring belonging to $L_2 \implies M_4$ rejects whilw simulating $M_2$; runtime is $t_1+t_2+c$;\\
+    $\therefore M_4$ correctly decides $L_3$ in polynomial time.\\
+\end{proof}
+$\therefore L_3 \in P$.\\
+
+\textit{Complement}: Consider the language $\overline{L_1}$ and the following Turing machine:
+\begin{algorithm}
+    \caption{$M_5(w)$}
+    \DontPrintSemicolon
+    Run $M_1$ on $w$\;
+    \If{$M_1$ accepts}{
+        \textbf{Reject} and halt\;
+    }\Else{
+        \textbf{Accept} and halt\;
+    }
+\end{algorithm}
+This Turing machine correctly decides $\overline{L_1}$ in polynomial time.
+\begin{proof}
+    Case 1: $w \in \overline{L_1} \implies w \notin \L_1 \implies M_1$ rejects $\implies M_5$ accepts; runtime is $t1+c$;\\
+    Case 2: $w \notin \overline{L_1} \implies w \in \L_1 \implies M_1$ accepts $\implies M_5$ rejects; runtime is $t1+c$;\\
+    $\therefore M_5$ correctly decides $\overline{L_1}$ in polynomial time.\\
+\end{proof}
+$\therefore \overline{L_1} \in P$.
+
+\section*{Problem 3}
+Assume the size of $t$ is $n, n\geq 1$; then $t$ can be expressed in the form:\\
+$$t=b_02^0 + b_12^1 + b_22^2 + \dots + b_{n-1}2^{n-1}$$
+where $b_i \in {0,1}$. Then $q^t=q^{b_02^0 + b_12^1 + b_22^2 + \dots + b_{n-1}2^{n-1}}$.\\
+Therefore, to compute $q^t$, we just need to compute each $q^{2^i}$.\\
+To compute $q^{2^i}$, we first compute $q^2$ by applying $q$ on $q$, which takes $O(1)$ time.\\
+Then, each $q^{2^i}$ can be computed in $O(1)$ time by applying $q^{2^{i-1}}$ on itself.\\
+Therefore it takes $O(n)$ times to compute $q^t$.\\
+Therefore $PERM-POWER \in P$
 \end{document}
