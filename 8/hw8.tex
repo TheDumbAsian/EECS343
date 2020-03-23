@@ -128,4 +128,23 @@ Because the Clique Problem is NP-Complete, we can try to reduce the Clique Probl
 
 \section*{Problem 3}
 
+To show that $HAMILTON\ CYCLE \leq_P GRAPH\ ISOMORPHISM$, construct an algorithm that transform the input to \verb#ham_cycle(g: Graph)# to invoke \verb#graph_iso(g: Graph, h: Graph)# and produce the correct result.
+\begin{proof}
+    Suppose algorithm \verb#graph_iso(g: Graph, h: Graph)# correctly decides if \verb#g# is isomorphic to \verb#h#. Construct the following algorithm:
+    \begin{verbatim}
+        function ham_cycle(g: Graph){
+            k <- count the number of vertices in g;
+            h <- create a Hamilton cycle using k vertices;
+            return graph_iso(g, h);
+        }
+    \end{verbatim}
+
+    Case 1: g is not a Hamilton cycle, then g is not isomorphic to a Hamilton cycle with \verb#k# vertices, therefore \verb#graph_iso(g,h)# returns false, and thus \verb#ham_cycle(g)# returns false;\\
+    Case 2: g is a Hamilton cycle, then g is isomorphic to a Hamilton cycle with \verb#k# vertices, therefore \verb#graph_iso(g,h)# returns true, and thus \verb#ham_cycle(g)# returns true.\\
+
+    Therefore this algorithm is correct.\\
+
+    Assume \verb#g# has n vertices, the number of vertices in \verb#g# could be counted in $O(n)$, the new Hamilton cycle could be constructed in $O(n)$.\\
+    Therefore this reduction runs in polynomial time $\implies\ HAMILTON\ CYCLE \leq_P GRAPH\ ISOMORPHISM$
+\end{proof}
 \end{document}
