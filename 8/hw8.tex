@@ -49,8 +49,8 @@ $\forall x \in L_1, \exists y$ such that $|y|=q_1(|x|), V_1(x, y) accepts$ and $
 $\forall x \notin L_1, \forall y \in \{y \mid |y| = p_1(|x|)\}, V_1(x, y)\ rejects$ and $\forall x \notin L_2, \forall y \in \{y \mid |y| = p_2(|x|)\}, V_2(x, y)\ rejects$.
 \subsection*{union -- $L_1 \cup L_2 \in NP$}
 \begin{proof}
-Construct a verifier TM $V_3$:
-\begin{verbatim}
+    Construct a verifier TM $V_3$:
+    \begin{verbatim}
     function v3(x,y) {
         run v1(x,y);
         if v1 accepts
@@ -61,20 +61,20 @@ Construct a verifier TM $V_3$:
         reject;
     }
 \end{verbatim}
-We know that by definition, $V_1$ and $V_2$ runs in polynomial times, therefore $V_3$ runs in polynomial time as well.\\
+    We know that by definition, $V_1$ and $V_2$ runs in polynomial times, therefore $V_3$ runs in polynomial time as well.\\
 
-Case 1: $x\in L_1 \implies \exists y \in \{y||y| = q_1(|x|)\} such\ that\ V_1\ accepts$ $\implies \exists y \in \{y||y| = q_1(|x|)\} such\ that\ V_3\ accepts$\\
-Case 2: $x\in L_1$\\
-Case 2.1: $x \in L_2\implies \exists y \in \{y||y| = q_2(|x|)\} such\ that\ V_2\ accepts$ $\implies \exists y \in \{y||y| = q_2(|x|)\} such\ that\ V_3\ accepts$\\
-Case 2.2: $x \notin L_2 \implies$ both $V_1$ and $V_2$ reject $\implies\ V_3$ rejects.\\
+    Case 1: $x\in L_1 \implies \exists y \in \{y||y| = q_1(|x|)\} such\ that\ V_1\ accepts$ $\implies \exists y \in \{y||y| = q_1(|x|)\} such\ that\ V_3\ accepts$\\
+    Case 2: $x\in L_1$\\
+    Case 2.1: $x \in L_2\implies \exists y \in \{y||y| = q_2(|x|)\} such\ that\ V_2\ accepts$ $\implies \exists y \in \{y||y| = q_2(|x|)\} such\ that\ V_3\ accepts$\\
+    Case 2.2: $x \notin L_2 \implies$ both $V_1$ and $V_2$ reject $\implies\ V_3$ rejects.\\
 
-Therefore $V_3$ verifies if $x\in L$ with advice string y in polynomial time $\iff L_1 \cup L_2 \in NP$.
+    Therefore $V_3$ verifies if $x\in L$ with advice string y in polynomial time $\iff L_1 \cup L_2 \in NP$.
 \end{proof}
 
 \subsection*{concatenation -- $L_1 \circ L_2 \in NP$}
 \begin{proof}
-Construct a verifier TM $V_4$:
-\begin{verbatim}
+    Construct a verifier TM $V_4$:
+    \begin{verbatim}
     function v4(x, y) {
         if (y is in the form "k#a#b"){ //k is a number, a and b are strings, # is a new character
             run v1(x[0:k-1], a); //slicing operator represents substrings
@@ -88,21 +88,43 @@ Construct a verifier TM $V_4$:
     }
 \end{verbatim}
 
-Similarly, because both $V_1$ and $V_2$ run in polynomial times, $V_4$ also runs in polynomial time.\\
+    Similarly, because both $V_1$ and $V_2$ run in polynomial times, $V_4$ also runs in polynomial time.\\
 
-Also by definition, we know that if a verifier accepts, then the advice string length is polynomial of the input string.\\
+    Also by definition, we know that if a verifier accepts, then the advice string length is polynomial of the input string.\\
 
-Case 1: $x\in L_1 \circ L_2 \implies a,$ and $b$ are polynomials of $x_1x_2\dots x_k$ and $x_{k+1}\dots x_n \implies$ "k\#a\#b" is polynomial of $x$.
-Also $V_1, V_2$ accpet in this case $\implies$ $V_4$ accepts. Therefore $\forall x \in L_1 \circ L_2, \exists y \in {y||y|=p(|x|)} \land V_4$ accepts.\\
-Case 2: $x\notin L_1 \circ L_2 \implies $ at least one of $V_1, V_2$ rejects $\implies$ for rejecting machine $V_i$: $\forall x\notin L_i, \forall y \in {y||y|=p(|x|)} \land V_i$ rejects.
-$\implies$ $\forall x\notin L_1 \circ L_2, \forall y \in {y||y|=p(|x|)} \land V_4$ rejects.
+    Case 1: $x\in L_1 \circ L_2 \implies a,$ and $b$ are polynomials of $x_1x_2\dots x_k$ and $x_{k+1}\dots x_n \implies$ "k\#a\#b" is polynomial of $x$.
+    Also $V_1, V_2$ accpet in this case $\implies$ $V_4$ accepts. Therefore $\forall x \in L_1 \circ L_2, \exists y \in {y||y|=p(|x|)} \land V_4$ accepts.\\
+    Case 2: $x\notin L_1 \circ L_2 \implies $ at least one of $V_1, V_2$ rejects $\implies$ for rejecting machine $V_i$: $\forall x\notin L_i, \forall y \in {y||y|=p(|x|)} \land V_i$ rejects.
+    $\implies$ $\forall x\notin L_1 \circ L_2, \forall y \in {y||y|=p(|x|)} \land V_4$ rejects.
 
-Therefore, $L_1 \circ L_2 \in NP$.
+    Therefore, $L_1 \circ L_2 \in NP$.
 \end{proof}
 
 \section*{Problem 2}
+Because the Clique Problem is NP-Complete, we can try to reduce the Clique Problem to SUBGRAPH ISOMORPHISM to show that it is in NP.\\
 
+\textbf{Claim: $CLIQUE \leq_{P} SUBGRAPH\ ISOMORPHISM$}
+\begin{proof}
+    Suppose there is an algorithm \verb#sgi(g: Graph, h: Graph)# that decides if \verb#h# is isomorphic to a subgraph of \verb#g#.\\
+    Consider the following algorithm that decides if a graph has a clique with a given number of vertices:
+    \begin{verbatim}
+        function clique(g: Graph, k: int){
+            generate a complete graph h with k vertices;
+            return sgi(g, h);
+        }
+    \end{verbatim}
+    Case 1: If \verb#g# has a clique of \verb#k# vertices, then \verb#g# has a subgraph that's isomorphic to \verb#h#, meaning that \verb#sgi(g, h)# returns true, and thus \verb#clique(g, k)# is true;\\
+    Case 2: If \verb#g# does not have a clique of \verb#k# verices, then \verb#g# does not have a subgraph that's isomorphic to \verb#h#, meaning that \verb#sgi(g,h)# returns false, and thus \verb#clique(g,k)# returns false;\\
 
+    Therefore, the algorithm is correct.\\
+
+    Assume the input graph has \verb#n# vertices, the input size could be as large as $n^2+n+1$. The generation of the complete graph \verb#h# can be performed in $O(k^2)$, which is smaller than $O(n^2)$.\\
+
+    Therefore, this reduction runs in polynomial times $\implies CLIQUE \leq_{P} SUBGRAPH\ ISOMORPHISM$.\\
+
+    Since $CLIQUE$ is NP-complete, then $SUBGRAPH\ ISOMORPHISM \in NP$.
+
+\end{proof}
 
 \section*{Problem 3}
 
