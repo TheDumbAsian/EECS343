@@ -1,0 +1,153 @@
+\documentclass[letterpaper]{article}
+
+\usepackage{amsmath}
+\usepackage{minted}
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{blindtext}
+\usepackage{amssymb}
+\usepackage{scrextend}
+\usepackage{multicol}
+\usepackage{wrapfig}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{amsthm}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{parskip}
+\usepackage[margin=0.6in]{geometry}
+
+
+% Turn on the style
+\pagestyle{fancy}
+% Clear the header and footer
+\fancyhead{}
+\fancyfoot{}
+% Set the right side of the footer to be the page number
+\fancyfoot[R]{\thepage}
+% Redefine plain style, which is used for titlepage and chapter beginnings
+% From https://tex.stackexchange.com/a/30230/828
+\fancypagestyle{plain}{%
+    \renewcommand{\headrulewidth}{0pt}%
+    \fancyhf{}%
+    \fancyfoot[R]{\thepage}%
+}
+
+
+\title{\vspace{-2cm}Homework 9}
+\author{Yutong Huang (yxh589)}
+\date{}
+
+
+\begin{document}
+\maketitle
+\section*{Problem 1}
+To prove that a language is NP-complete, we need to prove that it is NP and that every language L can be reduced to it in polynomial time.
+\begin{proof}
+    Assume $P=NP$, then $\forall A \in P$ such that $A \neq \phi\ \land A\neq \Sigma^* \implies A \in NP$. Then $\exists x \in L \land b\notin L$\\
+    Let $L$ be an arbitrary language from $NP=P$ such that $L \neq \phi\ \land L\neq \Sigma^*$, and there must a decider $D_L$ that decides $L$ in polynomial time.\\
+    Consider the following algorithm:
+    \begin{verbatim}
+        function reduction(w: string){
+            run D_L on input w;
+            if (D_L accepts){
+                return x;
+            }else {
+                return y;
+            }
+        }
+    \end{verbatim}
+    This algorithm maps words from $L$ to words from $A$ in polynomial time.\\
+    Case 1: $w \in L \implies D_L$ accepts $\implies$ \verb#reduction# returns $x \in A$ in polynomial time;\\
+    Case 2: $w \notin L \implies D_L$ rejects $\implies$ \verb#reduction# returns $y \notin A$ in polynomial time;\\
+    $\therefore \forall L, L \leq_P A \land A\in NP \implies A$ is NP-complete.
+\end{proof}
+
+\section*{Problem 2}
+We need to prove:
+\begin{enumerate}
+    \item $LPATH \in NP$
+    \item $\forall L \in NP, L \leq_P LPATH$
+\end{enumerate}
+\begin{proof}
+    $LPATH \in NP$:\\
+    Build a verifier for $LPATH$ that runs in polynomial time:\\
+    Consider the following algorithm $V(w,c)$, where $w \in \langle G,a,b,k\rangle$ and $c$ is a path:
+    \begin{verbatim}
+        function V(w: <G,a,b,k>, c: path){
+            if (c does not contain duplicate nodes && every node in c is also in G){
+                if (c.first == a && c.last == b){
+                    if (c.length >= k){
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }else {
+                return false;
+            }
+        }
+    \end{verbatim}
+    This algorithm will run in $O(CW)$ time, where $C = |c|,\ W=|w|$, which is polynomial.
+\end{proof}
+\begin{proof}
+    $\forall L \in NP, L \leq_P LPATH$\\
+    Consider the $UHAMPATH = \{ \langle G,s, t \rangle | $ G is an undirected graph, s and
+    t are two distinct vertices, and there is a path from s to t in
+    G that passes through each vertex of G exactly once$ \}$, which is NP-complete. Then we need to show that
+    $UHAMPATH \leq_P LAPTH$.\\
+    Consider the following reduction:
+    \begin{verbatim}
+        function reduction(G: Graph, s: Vertex, t: Vertex){
+            let k <- G.vertices.size() - 1;
+            return <G, s, t, k>;
+        }
+    \end{verbatim}
+    If $G = \langle V, E \rangle$, then this mapping takes $O(|V| + |E|)$ to complete.\\
+    Assume that $\langle G, s, t \rangle \in UHAMPATH$,\\
+    $\implies$ there is path in $G$ from $s$ to $t$ that passes through each vertex of $G$ exactly once.\\
+    then if $k = |V| - 1$, $\langle G,s,t,k \rangle \in LAPTH$.\\
+    Assume that $\langle G,a,b,k \rangle \in LAPTH$,\\
+    $\implies$ there exists a simple path between $a$ and $b$.\\
+    Because $k=|V| - 1 \implies$ this path must pass through all vertices exactly once.\\
+    $\implies \langle G,a,b \rangle \in UHAMPATH$\\
+    $\therefore \langle G,a,b \rangle \in UHAMPATH \iff \langle G,a,b,k \rangle \in LAPTH$\\
+    $\therefore UHAMPATH \leq_P LAPTH$
+\end{proof}
+$\therefore LPATH$ is NP-complete.
+
+\section*{Problem 3}
+\begin{enumerate}
+    \item $SET-SPLITTING \in NP$ \begin{proof}
+        We can verify if each $C_i \in C$ is monochromatic in $O(|C_i|)$ time, \\
+        $\implies$ we can verify if $C$ contains any monochromatic sets in $O(|C|)$ time.\\
+        $\therefore$ $SET-SPLITTING \in NP$.
+    \end{proof}
+    \item $\forall L \in NP, L \leq_P SET-SPLITTING$ \begin{proof}
+        We can prove this by reducing another NP-complete language to $SET-SPLITTING$: $3SAT$.\\
+        Suppose a formula $F \in 3SAT$, $F=(x_1 \lor x_2 \lor x_3) \land \dots \land (x_{n-2} \lor x_{n-1} \lor x_n)$.\\
+        Create a Set $S$ and a set of its subsets $C'$ as follows:
+        \begin{enumerate}
+            \item For each $x_i$, create $ x_i, \overline{x_i}$;
+            \item Then create a set S=$\{x_1, \overline{x_2}, x_2, \overline{x_2},\dots x_i, \overline{x_i}\dots x_n, \overline{x_n}\}$;
+            \item create a variable $f=false$; 
+            \item for every clause $C_i$ in $F$, create a set of 4 variables $C_i'$ containing elementes from $C_i$ and $f$
+        \end{enumerate}
+        Now we color every true variale in blue and every false one in red.
+        If $F$ is satisfiable, then every clause $C_i$ in $F$ must have at least one blue variable. This means that every $C_i'$ must have at least one of either color.\\
+        $\therefore \langle S, C' \rangle \in SET-SPLITTING$;
+
+        If $\langle S, C' \rangle \in SET-SPLITTING$, then at least one of each $C_i$ is true;\\
+        $\therefore F$ is satisfiable.
+
+        $\therefore 3SAT \leq_P SET-SPLITTING$ 
+        
+        $\therefore \forall L \in NP, L \leq_P SET-SPLITTING$
+    \end{proof}
+\end{enumerate}
+
+\end{document}
+
