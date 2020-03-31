@@ -140,11 +140,11 @@ $\therefore LPATH$ is NP-complete.
         If $F$ is satisfiable, then every clause $C_i$ in $F$ must have at least one blue variable. This means that every $C_i'$ must have at least one of either color.\\
         $\therefore \langle S, C' \rangle \in SET-SPLITTING$;
 
-        If $\langle S, C' \rangle \in SET-SPLITTING$, then at least one of each $C_i$ is true;\\
-        $\therefore F$ is satisfiable.
+        If $F$ is not satisfiable, then at least on of the clause $C_i$ in $F$ evaluates to false. Then we can find these clauses and for each one of them replace one of the $x_i$ with $\overline{x_i}$ to create a new set of clauses $C''$.\\
+        $\therefore \langle S, C'' \rangle \in SET-SPLITTING$
 
         $\therefore 3SAT \leq_P SET-SPLITTING$ 
-        
+
         $\therefore \forall L \in NP, L \leq_P SET-SPLITTING$
     \end{proof}
 \end{enumerate}
