@@ -78,10 +78,35 @@ Need to prove: $\overline{A} \in$ \textbf{co-NP} $\land \forall L \in$ \textbf{c
 Need to prove:
 \begin{enumerate}
     \item $A_{LBA} \in$ PSPACE \begin{proof}
-        
+        Construct a Turing-Machine that decides $A_{LBA}$ within $|w|$ space.\\
+        \begin{algorithm}[H]
+            \caption{$TM_{A_{LBA}}(M, w)$}
+            initialize M and w\;
+            let i = 0\;
+            let maxIteration = M.states.size() * w.size() * pow(M.tapeAlphabet.size(), w.size())\;
+            \While {i $\le$ maxIteration}{
+                simulate one step of M on w\;
+                \If {head exceeds range of [0, $|w|$]}{
+                    reject\;
+                }
+                \If{M accept}{
+                    accept\;
+                }
+            }
+            reject\;
+        \end{algorithm}
+        This TM decides wether $\langle M, w \rangle$ is in $M_{LBA}$ in $O(|w|)$ space.\\
+        $\therefore A_{LBA} \in$ PSPACE.
     \end{proof}
     \item $\forall L \in$ PSPACE, $L\leq_P A_{LBA}$ \begin{proof}
-        
+        Let $L$ be an arbitrary language in PSPACE, then $\exists M$ that decides $L$ in PSPACE.\\
+        Assume the maximum space $M$ can use is $n^k$, where $n$ is size of input, and $k$ is a constant integer.\\
+        Suppose $w$ is an input to $M$, and $l$ is a symbol in the alphabet of $L$, then we can construct a string by 
+        concatenating $l^{|w|^{k-1}}$ to $w$: $wl^{|w|^{k-1}}$, such that the size of this string is $|wl^{|w|^{k-1}}|=n^k$.\\
+        Then we can reduce $M$ to $A_{LBA}$ by invoking: $TM_{M_{LBA}}(M, wl^{|w|^{k-1}})$.\\
+        $\therefore \forall L \in$ PSPACE, $L\leq_P A_{LBA}$
     \end{proof}
+
+    $\therefore A_{LBA}$ is PSPACE-complete.
 \end{enumerate}
 \end{document}
