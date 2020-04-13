@@ -42,5 +42,100 @@
 \begin{document}
 \maketitle
 \section*{Problem 1}
+\begin{proof}
+    Let $M$ be a deterministic Turing machine. Define $M$ as follows:
+    \begin{enumerate}
+        \item On input $\langle G \rangle$, select a vertex $u$ as the starting vertex
+        \item select an edge from $u$, $(u, v)$, as the starting edge
+        \item traverse the graph through $(u,v)$
+        \item if $M$ comes back to $u$ through an edge other than $(u, v)$ accept, otherwise repeat step 1 to 4 until all vertices are enumerated
+        \item reject.
+    \end{enumerate}
+    Then $M$ decides UCYCLE.\\
+    Case 1: $G$ contains a cycle, then the graph traversal would eventually come across a vertex $u$ and an edge that leads back to 
+    $u$ that's different from $(u,v) \implies$ $M$ accepts.\\
+    Case 2: $G$ does not contain a cycle, then the traversal always comes back to $u$ via $(u,v) \implies M$ rejects.
 
+    Since all vertices are enumerated in logspace, $M$ also decides UCYCLE in logspace.
+
+    Therefore, UCYCLE $\in L$.
+\end{proof}
+
+\section*{Problem 2}
+
+\makeatletter
+\newcommand*{\textoverline}[1]{$\overline{\hbox{#1}}\m@th$}
+\newcommand*{\textin}[1]{$\in{\hbox{#1}}\m@th$}
+\makeatother
+Because \textbf{NL=coNL}, we can prove that BIPARTITE $\in$ \textbf{NL} by proving that \textoverline{BIPARTITE} $\in$ \textbf{NL}.
+\begin{proof}
+    Let $M$ be a non deterministic Turing machine. Define $M$ as follows:
+    \begin{verbatim}
+        M(G: graph){
+            int num <- 0;
+            node start <- non deterministically choose a starting node from G;
+            node next <- non deterministically choose a next node of start;
+            while (num <= sizeOf(G.vertices)){
+                if (next == start && num is odd){
+                    accept;
+                }
+                next <- non deterministically choose a next node of next;
+                increment num;
+            }
+            reject;
+        }
+    \end{verbatim}
+    It's clear that $M$ decides \textoverline{BIPARTITE} correctly.\\ 
+    Case 1: G does not have an odd cycle, then $M$ will loop through all nodes and reject;\\
+    Case 2: G does have an odd cycle, then $M$ will find the node that leads back to the starting node and accept.
+
+    And since $M$ only needs to keep track of
+    \verb#num#, \verb#start# and \verb#next#, it can decides \textoverline{BIPARTITE} in logspace.
+
+    Therefore \textoverline{BIPARTITE} $\in$ \textbf{NL} $\implies$ BIPARTITE $\in$ \textbf{NL}
+\end{proof}
+\newpage
+\section*{Problem 3}
+To prove that STRONGLY-CONNECTED is NL-complete, we need to prove that:
+\begin{enumerate}
+    \item STRONGLY-CONNECTED \textin{} NL \begin{proof}
+        Since \textbf{NL=coNL}, we can prove this by showing that \textoverline{STRONGLY-CONNECTED} \textin{NL}.\\
+        Construct a non deterministic Turing machine that decides \textoverline{STRONGLY-CONNECTED}:
+        \begin{verbatim}
+            function M(G: graph){
+                non deterministically select 2 nodes: a, b;
+                if PATH(a,b) accepts {
+                    then there is a path from a to b, reject;
+                } else {
+                    this is not a strongly connected graph, accept;
+                }
+            }
+        \end{verbatim}
+        Since this algorithm only needs to keep track of \verb#a# and \verb#b#, it only requires log space.
+
+        Therefore \textoverline{STRONGLY-CONNECTED} \textin{NL} $\implies$ STRONGLY-CONNECTED \textin{} NL.
+    \end{proof}
+    \item $\forall L \in$ NL, $L$ can be logspace reduced to STRONGLY-CONNECTED \begin{proof}
+        Since PATH is NL-complete, we can prove this by reducing PATH to STRONGLY-CONNECTED.\\
+        Consider the following non deterministic Turing machine:
+        \begin{verbatim}
+            function reduction(G: graph, s: vertex, t: vertex){
+                Copy G onto output tape;
+                foreach(node in G.vertices){
+                    write edge(node, s) to output tape;
+                    write edge(t, node) to output tape;
+                }
+            }
+        \end{verbatim}
+        Case 1: If there is a path from s to t, then the constructed graph is strongly connected because 
+        now every node can get to every other node via the path from s to t.\\
+        Case 2: If there is no path from s to t, then the graph is not strongly connected, because 
+        the only additional edges in the constructed graph go into s and out of t, therefore no path from 
+        s to t is formed.
+
+        This procedure only needs log space to store the node pointer.
+
+        Therefore PATH is log space reducible to STRONGLY-CONNECTED $\implies$ STRONGLY-CONNECTED is NL-complete.
+    \end{proof}
+\end{enumerate}
 \end{document}
